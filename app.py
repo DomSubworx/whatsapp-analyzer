@@ -12,8 +12,8 @@ if not api_key:
     st.error("🚨 OpenAI API-Key nicht gefunden! Bitte hinterlege den Key in den Streamlit Secrets.")
     st.stop()
 
-# OpenAI Client mit neuer Syntax (richtig!)
-client = openai.OpenAI(api_key=api_key)
+# OpenAI Client mit der neuesten API-Syntax
+client = openai.Client(api_key=api_key)
 
 # Sentiment-Analyse-Modell ohne torch oder tensorflow
 sentiment_pipeline = pipeline("sentiment-analysis", model="distilbert/distilbert-base-uncased-finetuned-sst-2-english")
