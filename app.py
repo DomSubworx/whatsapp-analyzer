@@ -6,7 +6,7 @@ import os
 from transformers import pipeline
 
 # OpenAI API-Key aus Umgebungsvariable laden
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 # Sentiment-Analyse-Modell ohne torch oder tensorflow
 sentiment_pipeline = pipeline("sentiment-analysis", model="distilbert/distilbert-base-uncased-finetuned-sst-2-english")
@@ -36,10 +36,6 @@ def parse_whatsapp_chat(chat_text):
 
     return df
 
-import openai
-
-client = openai.OpenAI()
-
 def analyze_relationship(df):
     """ GPT-4o Analyse der Beziehungsdynamik """
     chat_history = "\n".join(df.apply(lambda row: f"{row['Timestamp']} - {row['Absender']}: {row['Nachricht']}", axis=1))
@@ -61,12 +57,13 @@ def analyze_relationship(df):
 
     response = client.chat.completions.create(
         model="gpt-4o",
-        messages=[{"role": "system", "content": "Du bist ein erfahrener Kommunikationsanalyst."},
-                  {"role": "user", "content": prompt}]
+        messages=[
+            {"role": "system", "content": "Du bist ein erfahrener Kommunikationsanalyst."},
+            {"role": "user", "content": prompt}
+        ]
     )
 
     return response.choices[0].message.content
-
 
 # Streamlit UI
 st.title("📱 WhatsApp Chat Analyzer")
