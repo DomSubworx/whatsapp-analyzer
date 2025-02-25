@@ -9,7 +9,8 @@ from transformers import pipeline
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Sentiment-Analyse-Modell laden
-sentiment_pipeline = pipeline("sentiment-analysis", model="cardiffnlp/twitter-xlm-roberta-base-sentiment")
+sentiment_pipeline = pipeline("sentiment-analysis")
+
 
 def analyze_sentiment(text):
     """ Sentiment-Analyse für Nachrichten """
