@@ -36,10 +36,14 @@ def parse_whatsapp_chat(chat_text):
 
     return df
 
+import openai
+
+client = openai.OpenAI()
+
 def analyze_relationship(df):
     """ GPT-4o Analyse der Beziehungsdynamik """
     chat_history = "\n".join(df.apply(lambda row: f"{row['Timestamp']} - {row['Absender']}: {row['Nachricht']}", axis=1))
-    
+
     prompt = f"""
     Hier ist ein WhatsApp-Chatverlauf zwischen zwei Personen. Analysiere die Beziehung basierend auf den Nachrichten.
 
@@ -54,14 +58,15 @@ def analyze_relationship(df):
 
     Gib eine detaillierte, aber leicht verständliche Analyse!
     """
-    
-    response = openai.ChatCompletion.create(
+
+    response = client.chat.completions.create(
         model="gpt-4o",
         messages=[{"role": "system", "content": "Du bist ein erfahrener Kommunikationsanalyst."},
                   {"role": "user", "content": prompt}]
     )
-    
-    return response["choices"][0]["message"]["content"]
+
+    return response.choices[0].message.content
+
 
 # Streamlit UI
 st.title("📱 WhatsApp Chat Analyzer")
