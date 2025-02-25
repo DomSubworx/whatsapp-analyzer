@@ -6,7 +6,7 @@ import os
 from transformers import pipeline
 
 # OpenAI API-Key aus Umgebungsvariable laden
-client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Sentiment-Analyse-Modell ohne torch oder tensorflow
 sentiment_pipeline = pipeline("sentiment-analysis", model="distilbert/distilbert-base-uncased-finetuned-sst-2-english")
@@ -54,6 +54,8 @@ def analyze_relationship(df):
 
     Gib eine detaillierte, aber leicht verständliche Analyse!
     """
+
+    client = openai.OpenAI()
 
     response = client.chat.completions.create(
         model="gpt-4o",
