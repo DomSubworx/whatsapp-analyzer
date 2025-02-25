@@ -9,7 +9,27 @@ from transformers import pipeline
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Sentiment-Analyse-Modell laden
-sentiment_pipeline = pipeline("sentiment-analysis")
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
+import torch
+
+model_name = "nlptown/bert-base-multilingual-uncased-sentiment"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForSequenceClassification.from_pretrained(model_name)
+
+def analyze_sentiment(text):
+    inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True, max_length=512)
+    outputs = model(**inputs)
+    scores = torch.nn.functional.softmax(outputs.logits, dim=-1)
+    sentiment_score = torch.argmax(scores).item()
+
+    # Sentiment in "positiv", "neutral" oder "negativ" umwandeln
+    if sentiment_score > 2:
+        return "positive"
+    elif sentiment_score == 2:
+        return "neutral"
+    else:
+        return "negative"
+
 
 
 def analyze_sentiment(text):
