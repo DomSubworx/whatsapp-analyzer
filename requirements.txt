@@ -2,4 +2,6 @@ openai
 streamlit
 pandas
 transformers
-torch
+torch==2.0.1
+torchvision
+torchaudio
