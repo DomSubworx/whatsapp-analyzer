@@ -12,8 +12,8 @@ if not api_key:
     st.error("🚨 OpenAI API-Key nicht gefunden! Bitte hinterlege den Key in den Streamlit Secrets.")
     st.stop()
 
-# OpenAI Client mit der neuesten API-Syntax
-client = openai.Client(api_key=api_key)
+# OpenAI API-Schlüssel setzen (richtige Methode!)
+openai.api_key = api_key
 
 # Sentiment-Analyse-Modell ohne torch oder tensorflow
 sentiment_pipeline = pipeline("sentiment-analysis", model="distilbert/distilbert-base-uncased-finetuned-sst-2-english")
@@ -62,7 +62,7 @@ def analyze_relationship(df):
     Gib eine detaillierte, aber leicht verständliche Analyse!
     """
 
-    response = client.chat.completions.create(
+    response = openai.ChatCompletion.create(
         model="gpt-4o",
         messages=[
             {"role": "system", "content": "Du bist ein erfahrener Kommunikationsanalyst."},
@@ -70,7 +70,7 @@ def analyze_relationship(df):
         ]
     )
 
-    return response.choices[0].message.content
+    return response["choices"][0]["message"]["content"]
 
 # Streamlit UI
 st.title("📱 WhatsApp Chat Analyzer")
